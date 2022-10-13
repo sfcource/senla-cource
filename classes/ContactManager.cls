@@ -61,6 +61,21 @@ public class ContactManager {
         List<Contact> contacts = Database.query(query);
         return contacts;
     } 
-   
+
+    public static List<Contact> updateContactsPhoneByIds(String newPhone, List<Id> ids, Boolean serialize) {
+        String query = 'select ' + fields + ' from Contact where Id in :ids';
+        List<Contact> newContacts = Database.query(query);
+        for(Contact contact : newContacts) {
+            contact.Phone = newPhone;
+        }
+
+        if (serialize) update newContacts;
+
+        return newContacts;
+    }
+
+    public static void deleteContactsByEmails(List<String> emails) {
+        delete [SELECT Id FROM Contact WHERE Email IN :emails];
+    }   
     
 }
