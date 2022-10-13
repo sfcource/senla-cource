@@ -10,7 +10,7 @@ public class LogManager {
         public String type {get; set;}
         
                 
-    }
+    }   
 
     public static Log__c createLog(LogWrapper wrapper, Boolean serialize) {
         Log__c log = new Log__c();
@@ -23,6 +23,17 @@ public class LogManager {
         if (serialize) insert log;
  
         return log;
+    }
+
+    public static Log__c updateLogById(Id id, String type, String message, Boolean serialize) {
+        String query = 'select ' + fields + ' from Log__c where Id in :ids';
+        List<Log__c> newLogs = Database.query(query);
+        newLogs.Type__c = type;
+        newLogs.Message__c = message;
+        
+        if (serialize) update newLogs;
+
+        return newLogs;
     }
  
  
@@ -53,6 +64,10 @@ public class LogManager {
         List<Log__c> logs = Database.query(query);
         return logs;
     } 
+
+    public static void deleteLogsByTypes(List<String> types) {
+        delete [SELECT id FROM Log__c WHERE Type__c IN :types];
+    }
    
     
 }
